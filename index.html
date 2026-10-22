@@ -22,19 +22,18 @@
         }
 
         #mapa-container {
-            flex: 1.3;
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            /* Centra el contenido verticalmente para aprovechar el espacio */
-            height: 100%;
-            overflow-y: auto;
-        }
+    flex: 1.3;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Forzamos a que inicie siempre desde el borde superior */
+    height: 100%;
+    overflow-y: auto;
+}
 
         #mapa-container h1 {
             margin: -10px 0 15px 0;
