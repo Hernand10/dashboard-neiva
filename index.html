@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Oficial - Comunas de Neiva</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Pantalla fija sin scroll general en PC */
+        body {
+            margin: 0;
+            padding: 15px;
+            background-color: #f4f6f9;
+            display: flex;
+            gap: 20px;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #mapa-container {
+            flex: 1.3;
+            min-width: 320px;
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* Centra el contenido verticalmente */
+            height: calc(100vh - 30px);
+            overflow: hidden;
+        }
+
+        #mapa-container h1 {
+            margin: 0 0 10px 0;
+            color: #1a252f;
+            font-size: 22px;
+            text-align: center;
+        }
+
+        /* Contenedor del mapa adaptativo */
+        .mapa-wrapper {
+            position: relative;
+            display: inline-block;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #ffffff;
+            margin: 0 auto;
+        }
+
+        /* El mapa se adapta a la altura de la pantalla y calcula su ancho proporcional */
+        .mapa-wrapper img#img-mapa {
+            height: calc(100vh - 160px);
+            /* Altura máxima según la pantalla */
+            width: auto;
+            /* Ancho automático para no deformar ni recortar */
+            max-width: 100%;
+            display: block;
+        }
+
+        .zona-comuna {
+            position: absolute;
+            width: 36.5px;
+            height: 36.5px;
+            background: #007bff;
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s, background-color 0.2s;
+            z-index: 5;
+            transform: translate(-50%, -50%);
+        }
+
+        .zona-comuna:hover {
+            transform: translate(-50%, -50%) scale(1.35);
+            background: #0056b3;
+            z-index: 10;
+        }
+
+        /* Estilo específico para el botón redondo de N/A */
+        .zona-na {
+            width: clamp(30px, 4vw, 48px);
+            height: clamp(30px, 4vw, 48px);
+            font-size: clamp(9px, 1.1vw, 15px);
+            letter-spacing: -0.5px;
+        }
+
+        .zona-na:hover {
+            background: #5a6268 !important;
+            transform: translate(-50%, -50%) scale(1.35);
+        }
+
+        /* POSICIONES SOBRE EL MAPA */
+        #c-na {
+            top: 58%;
+            left: 90%;
+        }
+
+        #c1 {
+            top: 35%;
+            left: 26%;
+        }
+
+        #c2 {
+            top: 36%;
+            left: 40%;
+        }
+
+        #c3 {
+            top: 49%;
+            left: 34.5%;
+        }
+
+        #c4 {
+            top: 58%;
+            left: 38%;
+        }
+
+        #c5 {
+            top: 46%;
+            left: 51%;
+        }
+
+        #c6 {
+            top: 75%;
+            left: 50%;
+        }
+
+        #c7 {
+            top: 54.5%;
+            left: 61%;
+        }
+
+        #c8 {
+            top: 61%;
+            left: 59%;
+        }
+
+        #c9 {
+            top: 20%;
+            left: 39%;
+        }
+
+        #c10 {
+            top: 40%;
+            left: 69.9%;
+        }
+
+        /* LOGOS UBICADOS EN EL MAPA */
+        .logos-overlay {
+            position: absolute;
+            top: 4%;
+            left: 57%;
+            width: 40.4%;
+            display: flex;
+            gap: 4%;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            background: rgba(255, 255, 255);
+            padding: 1%;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(3, 3, 3, 0.15);
+        }
+
+        .logo-img {
+            width: 40%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* Panel Lateral */
+        #panel-datos {
+            flex: 0.7;
+            min-width: 300px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 30px);
+            overflow: hidden;
+        }
+
+        .header-panel {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .header-panel h2 {
+            margin: 0;
+            color: #1a252f;
+            font-size: 20px;
+        }
+
+        .header-panel p {
+            margin: 4px 0 0;
+            color: #6c757d;
+            font-size: 13px;
+        }
+
+        .btn-reset {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .btn-reset:hover {
+            background-color: #0056b3;
+        }
+
+        /* Contenedor de la lista con scroll independiente */
+        #lista-detalles {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+            margin-bottom: 12px;
+        }
+
+        /* Tarjetas de Métricas */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding-top: 12px;
+            border-top: 2px solid #e1e8ed;
+            background: #ffffff;
+        }
+
+        .card-metric {
+            background: #eef5ff;
+            border-left: 4px solid #007bff;
+            padding: 8px 6px;
+            border-radius: 6px;
+        }
+
+        .card-metric h3 {
+            margin: 0 0 4px;
+            font-size: 9px;
+            color: #0056b3;
+            text-transform: uppercase;
+        }
+
+        .card-metric p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: bold;
+            color: #1a252f;
+        }
+
+        .item-registro {
+            background: #fff;
+            border: 1px solid #e1e8ed;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .item-registro div {
+            margin-bottom: 3px;
+            font-size: 12px;
+        }
+
+        .item-registro strong {
+            color: #333;
+        }
+
+        /* Adaptabilidad para móviles */
+        @media (max-width: 900px) {
+            body {
+                height: auto;
+                overflow: auto;
+            }
+
+            #mapa-container,
+            #panel-datos {
+                height: auto;
+            }
+
+            #panel-datos {
+                height: 550px;
+            }
+
+            .mapa-wrapper img#img-mapa {
+                height: auto;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="mapa-container">
+        <h1>Seguimiento a modulo de Dx por comunas de Neiva</h1>
+
+        <div class="mapa-wrapper">
+            <img id="img-mapa" src="mapa.png" alt="Mapa de Neiva">
+
+            <!-- LOGOS DENTRO DEL MAPA -->
+            <div class="logos-overlay">
+                <img src="logofundacion.jpeg" alt="Logo Fundación" class="logo-img">
+                <img src="logohagale.jpeg" alt="Logo Hágale" class="logo-img">
+            </div>
+
+            <!-- BOTÓN REDONDO DE NO APLICA (N/A) -->
+            <div id="c-na" class="zona-comuna zona-na" onclick="actualizarPanel('No aplica')">N/A</div>
+
+            <!-- Botones de Comunas (1 al 10) -->
+            <div id="c1" class="zona-comuna" onclick="actualizarPanel('Comuna 1')">1</div>
+            <div id="c2" class="zona-comuna" onclick="actualizarPanel('Comuna 2')">2</div>
+            <div id="c3" class="zona-comuna" onclick="actualizarPanel('Comuna 3')">3</div>
+            <div id="c4" class="zona-comuna" onclick="actualizarPanel('Comuna 4')">4</div>
+            <div id="c5" class="zona-comuna" onclick="actualizarPanel('Comuna 5')">5</div>
+            <div id="c6" class="zona-comuna" onclick="actualizarPanel('Comuna 6')">6</div>
+            <div id="c7" class="zona-comuna" onclick="actualizarPanel('Comuna 7')">7</div>
+            <div id="c8" class="zona-comuna" onclick="actualizarPanel('Comuna 8')">8</div>
+            <div id="c9" class="zona-comuna" onclick="actualizarPanel('Comuna 9')">9</div>
+            <div id="c10" class="zona-comuna" onclick="actualizarPanel('Comuna 10')">10</div>
+
+        </div>
+    </div>
+
+    <div id="panel-datos">
+        <div class="header-panel">
+            <h2 id="titulo-comuna">Todas las Comunas</h2>
+            <p id="subtitulo">Consolidado general de respuestas</p>
+            <button class="btn-reset" onclick="actualizarPanel('Todas las Comunas')">Mostrar Todas</button>
+        </div>
+
+        <div id="lista-detalles">
+            <p style="color: #666;">Cargando datos...</p>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="card-metric">
+                <h3>Brigadas</h3>
+                <p id="total-respuestas">0</p>
+            </div>
+            <div class="card-metric">
+                <h3>Total Pruebas</h3>
+                <p id="total-pruebas">0</p>
+            </div>
+            <div class="card-metric">
+                <h3>Total Positividad</h3>
+                <p id="total-positividad">0</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let datosGlobales = [];
+
+        fetch('/datos?v=' + new Date().getTime())
+            .then(res => res.json())
+            .then(data => {
+                datosGlobales = data;
+                actualizarPanel("Todas las Comunas");
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('lista-detalles').innerHTML = '<p style="color:red;">Error al cargar datos.</p>';
+            });
+
+        function obtenerNumeroPorPosicionOCat(item, palabraBuscada, indiceRespaldo) {
+            if (!item) return 0;
+
+            let keys = Object.keys(item);
+
+            for (let k of keys) {
+                let keyLimpia = k.toUpperCase();
+                if (keyLimpia.includes(palabraBuscada)) {
+                    let val = item[k];
+                    if (val !== null && val !== undefined && val !== '') {
+                        let num = parseFloat(String(val).replace(',', '.').replace(/[^\d.]/g, ''));
+                        if (!isNaN(num)) return num;
+                    }
+                }
+            }
+
+            if (keys.length > indiceRespaldo) {
+                let keyPorIndice = keys[indiceRespaldo];
+                let val = item[keyPorIndice];
+                if (val !== null && val !== undefined && val !== '') {
+                    let num = parseFloat(String(val).replace(',', '.').replace(/[^\d.]/g, ''));
+                    if (!isNaN(num)) return num;
+                }
+            }
+
+            return 0;
+        }
+
+        function actualizarPanel(comuna) {
+            document.getElementById('titulo-comuna').innerText = comuna;
+
+            let filtrados = datosGlobales;
+
+            if (comuna === "No aplica") {
+                filtrados = datosGlobales.filter(item => {
+                    let val = JSON.stringify(item).toLowerCase();
+                    return val.includes('no aplica');
+                });
+                document.getElementById('subtitulo').innerText = `Resultados de brigadas en otros municipios`;
+            }
+            else if (comuna !== "Todas las Comunas") {
+                let numComuna = comuna.replace(/\D/g, "");
+                filtrados = datosGlobales.filter(item => {
+                    let val = JSON.stringify(item).toLowerCase();
+                    if (val.includes('no aplica')) return false;
+                    return val.includes(comuna.toLowerCase()) || (numComuna && val.includes(`comuna ${numComuna}`));
+                });
+                document.getElementById('subtitulo').innerText = `Resultados de ${comuna}`;
+            } else {
+                document.getElementById('subtitulo').innerText = `Consolidado general de respuestas`;
+            }
+
+            filtrados.sort((a, b) => {
+                let valA = obtenerNumeroPorPosicionOCat(a, 'POSITIV', 7);
+                let valB = obtenerNumeroPorPosicionOCat(b, 'POSITIV', 7);
+                return valB - valA;
+            });
+
+            let numPruebas = 0;
+            let sumaPositividad = 0;
+
+            filtrados.forEach(item => {
+                numPruebas += obtenerNumeroPorPosicionOCat(item, 'CANTIDAD', 6);
+                sumaPositividad += obtenerNumeroPorPosicionOCat(item, 'POSITIV', 7);
+            });
+
+            document.getElementById('total-respuestas').innerText = filtrados.length;
+            document.getElementById('total-pruebas').innerText = numPruebas;
+            document.getElementById('total-positividad').innerText = sumaPositividad;
+
+            let html = '';
+            if (filtrados.length === 0) {
+                html = '<p style="color: #888;">No hay registros para esta selección aún.</p>';
+            } else {
+                filtrados.forEach((reg, idx) => {
+                    html += `<div class="item-registro"><strong>#${idx + 1}</strong>`;
+                    Object.keys(reg).forEach(k => {
+                        if (reg[k] !== '') {
+                            html += `<div><strong>${k}:</strong> ${reg[k]}</div>`;
+                        }
+                    });
+                    html += `</div>`;
+                });
+            }
+            document.getElementById('lista-detalles').innerHTML = html;
+        }
+    </script>
+</body>
+
+</html>
