@@ -245,6 +245,7 @@
         /* Contenedor de la lista con scroll independiente */
         #lista-detalles {
             flex: 1;
+            min-height: 0; /* Esta es la clave para que no empuje las métricas hacia afuera */
             overflow-y: auto;
             padding-right: 5px;
             margin-bottom: 15px;
