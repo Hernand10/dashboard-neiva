@@ -4,17 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Oficial - Comunas de Neiva</title>
+    <title>Dashboard Oficial - Comunas de Ibagué</title>
     <style>
         * {
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Pantalla fija sin scroll general en PC */
         body {
             margin: 0;
-            padding: 15px;
+            padding: 20px;
             background-color: #f4f6f9;
             display: flex;
             gap: 20px;
@@ -24,31 +23,29 @@
 
         #mapa-container {
             flex: 1.3;
-            min-width: 320px;
             background: white;
             border-radius: 12px;
-            padding: 15px;
+            padding: 20px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            /* Centra el contenido verticalmente */
-            height: calc(100vh - 30px);
-            overflow: hidden;
+            height: 100%;
+            overflow-y: auto;
         }
 
         #mapa-container h1 {
-            margin: 0 0 10px 0;
+            margin: 0 0 15px 0;
             color: #1a252f;
-            font-size: 22px;
+            font-size: 24px;
             text-align: center;
         }
 
-        /* Contenedor del mapa adaptativo */
         .mapa-wrapper {
             position: relative;
             display: inline-block;
+            width: 100%;
+            max-width: 850px;
             border: 1px solid #d1d5db;
             border-radius: 8px;
             overflow: hidden;
@@ -56,20 +53,16 @@
             margin: 0 auto;
         }
 
-        /* El mapa se adapta a la altura de la pantalla y calcula su ancho proporcional */
         .mapa-wrapper img#img-mapa {
-            height: calc(100vh - 160px);
-            /* Altura máxima según la pantalla */
-            width: auto;
-            /* Ancho automático para no deformar ni recortar */
-            max-width: 100%;
+            width: 100%;
+            height: auto;
             display: block;
         }
 
         .zona-comuna {
             position: absolute;
-            width: 36.5px;
-            height: 36.5px;
+            width: 30px;
+            height: 30px;
             background: #007bff;
             color: white;
             border: 2px solid white;
@@ -78,7 +71,7 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 13px;
             cursor: pointer;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
             transition: transform 0.2s, background-color 0.2s;
@@ -94,9 +87,9 @@
 
         /* Estilo específico para el botón redondo de N/A */
         .zona-na {
-            width: clamp(30px, 4vw, 48px);
-            height: clamp(30px, 4vw, 48px);
-            font-size: clamp(9px, 1.1vw, 15px);
+            width: 38px;
+            height: 38px;
+            font-size: 10px;
             letter-spacing: -0.5px;
         }
 
@@ -106,7 +99,7 @@
         }
 
         /* POSICIONES SOBRE EL MAPA */
-        #c-na {
+         #c-na {
             top: 58%;
             left: 90%;
         }
@@ -161,7 +154,22 @@
             left: 69.9%;
         }
 
-        /* LOGOS UBICADOS EN EL MAPA */
+        #c11 {
+            top: 49%;
+            left: 31%;
+        }
+
+        #c12 {
+            top: 46%;
+            left: 23%;
+        }
+
+        #c13 {
+            top: 57%;
+            left: 15%;
+        }
+
+        /* LOGOS RESPONSIVOS UBICADOS EN EL MAPA */
         .logos-overlay {
             position: absolute;
             top: 4%;
@@ -187,44 +195,41 @@
         /* Panel Lateral */
         #panel-datos {
             flex: 0.7;
-            min-width: 300px;
             background: white;
             border-radius: 12px;
-            padding: 20px;
+            padding: 25px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 30px);
-            overflow: hidden;
+            height: 100%;
         }
 
         .header-panel {
             border-bottom: 2px solid #007bff;
-            padding-bottom: 8px;
-            margin-bottom: 12px;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .header-panel h2 {
             margin: 0;
             color: #1a252f;
-            font-size: 20px;
         }
 
         .header-panel p {
-            margin: 4px 0 0;
+            margin: 5px 0 0;
             color: #6c757d;
-            font-size: 13px;
+            font-size: 14px;
         }
 
         .btn-reset {
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 8px 14px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 12px;
-            margin-top: 8px;
+            font-size: 13px;
+            margin-top: 10px;
             font-weight: 600;
         }
 
@@ -237,15 +242,15 @@
             flex: 1;
             overflow-y: auto;
             padding-right: 5px;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
         }
 
         /* Tarjetas de Métricas */
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            padding-top: 12px;
+            gap: 10px;
+            padding-top: 15px;
             border-top: 2px solid #e1e8ed;
             background: #ffffff;
         }
@@ -253,7 +258,7 @@
         .card-metric {
             background: #eef5ff;
             border-left: 4px solid #007bff;
-            padding: 8px 6px;
+            padding: 10px 8px;
             border-radius: 6px;
         }
 
@@ -266,7 +271,7 @@
 
         .card-metric p {
             margin: 0;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
             color: #1a252f;
         }
@@ -274,40 +279,18 @@
         .item-registro {
             background: #fff;
             border: 1px solid #e1e8ed;
-            padding: 10px;
+            padding: 12px;
             border-radius: 6px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .item-registro div {
-            margin-bottom: 3px;
-            font-size: 12px;
+            margin-bottom: 4px;
+            font-size: 13px;
         }
 
         .item-registro strong {
             color: #333;
-        }
-
-        /* Adaptabilidad para móviles */
-        @media (max-width: 900px) {
-            body {
-                height: auto;
-                overflow: auto;
-            }
-
-            #mapa-container,
-            #panel-datos {
-                height: auto;
-            }
-
-            #panel-datos {
-                height: 550px;
-            }
-
-            .mapa-wrapper img#img-mapa {
-                height: auto;
-                width: 100%;
-            }
         }
     </style>
 </head>
@@ -315,10 +298,10 @@
 <body>
 
     <div id="mapa-container">
-        <h1>Seguimiento a modulo de Dx por comunas de Neiva</h1>
+        <h1>Seguimiento a modulo de Dx por comunas de Ibagué</h1>
 
         <div class="mapa-wrapper">
-            <img id="img-mapa" src="mapa.png" alt="Mapa de Neiva">
+            <img id="img-mapa" src="mapa.png" alt="Mapa de Ibagué">
 
             <!-- LOGOS DENTRO DEL MAPA -->
             <div class="logos-overlay">
@@ -329,7 +312,7 @@
             <!-- BOTÓN REDONDO DE NO APLICA (N/A) -->
             <div id="c-na" class="zona-comuna zona-na" onclick="actualizarPanel('No aplica')">N/A</div>
 
-            <!-- Botones de Comunas (1 al 10) -->
+            <!-- Botones de Comunas (1 al 13) -->
             <div id="c1" class="zona-comuna" onclick="actualizarPanel('Comuna 1')">1</div>
             <div id="c2" class="zona-comuna" onclick="actualizarPanel('Comuna 2')">2</div>
             <div id="c3" class="zona-comuna" onclick="actualizarPanel('Comuna 3')">3</div>
@@ -417,18 +400,19 @@
             document.getElementById('titulo-comuna').innerText = comuna;
 
             let filtrados = datosGlobales;
-
+            
             if (comuna === "No aplica") {
                 filtrados = datosGlobales.filter(item => {
                     let val = JSON.stringify(item).toLowerCase();
                     return val.includes('no aplica');
                 });
                 document.getElementById('subtitulo').innerText = `Resultados de brigadas en otros municipios`;
-            }
+            } 
             else if (comuna !== "Todas las Comunas") {
                 let numComuna = comuna.replace(/\D/g, "");
                 filtrados = datosGlobales.filter(item => {
                     let val = JSON.stringify(item).toLowerCase();
+                    // Evita que las comunas urbanas capten registros de "no aplica"
                     if (val.includes('no aplica')) return false;
                     return val.includes(comuna.toLowerCase()) || (numComuna && val.includes(`comuna ${numComuna}`));
                 });
@@ -443,16 +427,16 @@
                 return valB - valA;
             });
 
-            let numPruebas = 0;
+            let sumaPruebas = 0;
             let sumaPositividad = 0;
 
             filtrados.forEach(item => {
-                numPruebas += obtenerNumeroPorPosicionOCat(item, 'CANTIDAD', 6);
+                sumaPruebas += obtenerNumeroPorPosicionOCat(item, 'CANTIDAD', 6);
                 sumaPositividad += obtenerNumeroPorPosicionOCat(item, 'POSITIV', 7);
             });
 
             document.getElementById('total-respuestas').innerText = filtrados.length;
-            document.getElementById('total-pruebas').innerText = numPruebas;
+            document.getElementById('total-pruebas').innerText = sumaPruebas;
             document.getElementById('total-positividad').innerText = sumaPositividad;
 
             let html = '';
