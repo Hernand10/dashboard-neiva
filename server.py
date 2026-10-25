@@ -14,7 +14,7 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
         if self.path.startswith('/datos'):
             try:
                 # 1. URL con timestamp (_t) para romper la caché de Google Sheets
-                base_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQzumgG5tyHc8LR11uGlPsuo4sSIT9c45it4ovi7DWQqXDVTtqQ2wbTWpuIOudaX-trcJlhxFURWKZg/pub?output=csv"
+                base_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQO2frj6Pm2ULDzOVjJbwkYoEU2tssH_gqh8O39IaWnxcvIjXBEMDtIG44LVpoBfFOB1nZGuCJX56qd/pub?output=csv"
                 fresh_url = f"{base_url}&_t={int(time.time())}"
 
                 req = urllib.request.Request(
